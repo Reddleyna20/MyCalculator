@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>offline Calculator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+
+     *{
+    margin:0;
+    padding:0;
+    box-sizing: border-box;
+    font-family: 'Poppins',sans-serif;
+}
+ 
+/* 
+   BODY
+ */
+ 
+body{
+    background:  #cac4c4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height:100vh;
+}
+ 
+/*   CALCULATOR  */
+ 
+.calculator{
+    width:430px;
+    background: rgb(241, 240, 240);
+    border-radius:25px;
+    padding:30px;
+    border:1px solid white;
+    box-shadow:
+    0 15px 30px white,
+    inset 1px 1p x 2px white,
+    inset -2px -2px 5px white;
+}
+
+ /*  DISPLAY */
+#screen{
+    width:100%;
+    height:100px;
+    border: none;
+    outline: none;
+    border-radius: none;
+    background: rgb(241, 240, 240);
+    color: black;
+    font-size:50px;
+    text-align: right;
+    padding-right:25px;
+    margin-bottom:25px;
+    box-shadow:
+    inset 3px 3px 8px white,
+    inset -2px -2px 4px white;
+ 
+}
+ 
+/* SCI BUTTON */
+ 
+.toggle-btn{
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap:12px;
+    margin-bottom:20px;
+ 
+}
+
+.history-btn{
+    margin-right: auto;
+    height:36px;
+    padding:0 16px;
+    border: none;
+    border-radius:18px;
+    background: white;
+    color: black;
+    font-size:14px;
+    cursor: pointer;
+    box-shadow: 3px 3px 10px white;
+    transition: .25s;
+ 
+}
+ 
+.history-btn:hover{
+
+    background: rgb(223, 220, 220);
+ 
+   }
+ 
+.toggle-label{
+    color: black;
+    font-size: 16px;
+    letter-spacing: .5px;
+ }
+ 
+/* 
+   SCI SWITCH
+   The button IS the pill-shaped track. The knob is a ::before
+   circle sitting left (off) or right (on).
+   #toggleSci (basicMode) = off: light track, knob on the left.
+   #toggleStandard (scientificMode) = on: dark track, knob right.
+ */
+ 
+.switch{
+    position: relative;
+    width: 54px;
+    height: 30px;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    background: rgb(223, 220, 220);
+    box-shadow:
+    inset 2px 2px 5px rgba(0,0,0,.15),
+    inset -2px -2px 4px rgba(255,255,255,.6);
+transition:.25s;
+}
+ 
+.switch:hover{
+    background:rgb(205, 202, 202);
+ 
+}
+ 
+.switch::before{
+    content:"";
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 24px;
+    height: 24px;
+    border-radius:50%;
+    background: white;
+    box-shadow:0 2px 5px rgba(0,0,0,.3);
+    transition:.25s;
+ 
+}
+ 
+#toggleStandard{
+    background: black;
+ 
+}
+ 
+#toggleStandard:hover{
+    background: #222;
+ 
+}
+ 
+#toggleStandard::before{
+    left: 27px;
+}
+ 
+/*  BASIC BUTTONS  */
+ 
+#basicMode div:last-child{
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    gap:18px;
+ 
+}
+ 
+/* SCIENTIFIC BUTTONS */
+ 
+.buttons{
+ 
+    display: grid;
+    grid-template-columns: repeat(5,1fr);
+    gap:15px;
+}
+ 
+/*  GENERAL BUTTON */
+ 
+button{
+    height:82px;
+    border: none;
+    border-radius:18px;
+    cursor: pointer;
+    font-size:25px;
+    color: black;
+    transition: .25s;
+ 
+}
+ 
+/* NUMBER BUTTONS */
+ 
+.number{
+    background: rgb(241, 240, 240);
+    box-shadow:
+    3px 3px 10px white,
+    inset 1px 1px 2px white;
+ 
+}
+ 
+.number:hover{
+    background: rgb(223, 220, 220);
+ 
+}
+ 
+/* OPERATORS */
+ 
+.operator{
+    background: black;
+    color: white;
+    font-size: 25px;
+ 
+}
+ 
+.operator:hover{
+    background: rgb(146, 145, 145);
+ 
+}
+ 
+/* CLEAR BUTTON */
+ 
+.clear{
+    background: blue;
+    color: white;
+ 
+}
+ 
+.clear:hover{
+    background: rgb(72, 72, 247);
+ 
+}
+ 
+/*   EQUAL BUTTON */
+ 
+.equal-to{
+    background: black;
+    color: white;
+}
+ 
+.equal-to:hover{
+    background: #706b6b;
+ 
+}
+ 
+/* SCIENTIFIC BUTTONS */
+ 
+.function{
+    background: white;
+    font-size: 20px;
+    box-shadow:
+    3px 3px 10px white,
+    inset 1px 1px 2px white;
+ 
+}
+ 
+.function:hover{
+    background: rgb(223, 220, 220);
+}
+ 
+.decimal{
+    background: rgb(241, 240, 240);
+    box-shadow:
+    3px 3px 10px white,
+    inset 1px 1px 2px white;
+}
+ 
+.decimal:hover{
+    background: rgb(223, 220, 220);
+ 
+}
+ 
+/* SCIENTIFIC MODE */
+ 
+#scientificMode{
+    display: none;
+    }
+
+/* History Panel */
+#historyPanel {
+    display: none;
+    width: 100%;
+}
+ 
+.history-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20x;
+}
+
+.history-title {
+    font-size: 20px;
+    font-weight: 500;
+    color: black;
+}
+
+.history-back-btn,
+.history-clear-btn {
+    height: 40px;
+    padding: 0 16px;
+    border: none;
+    border-radius: 14px;
+    background: white;
+    color: black;
+    font-size: 15px;
+    cursor: pointer;
+    box-shadow: 3px 3px 10px white;
+    transition: .25s;
+}
+
+.history-back-btn:hover,
+.history-clear-btn:hover{
+ 
+    background:rgb(223, 220, 220);
+ 
+}
+ 
+.history-list{
+ 
+    max-height: 500px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+ 
+}
+ 
+.history-empty{
+ 
+    text-align: center;
+    color:#999;
+    font-size: 16px;
+    padding: 40px 0;
+ 
+}
+ 
+.history-entry{
+ 
+    background:white;
+    border-radius: 14px;
+    padding: 14px 18px;
+    cursor: pointer;
+    box-shadow:
+    3px 3px 10px white,
+    inset 1px 1px 2px white;
+    transition: .25s;
+ 
+}
+ 
+.history-entry:hover{
+    background: rgb(223, 220, 220);
+}
+ 
+.history-expr{
+ 
+    display: block;
+    font-size: 14px;
+    color:#888;
+    margin-bottom: 4px;
+ 
+}
+ 
+.history-result{
+ 
+    display: block;
+    font-size: 26px;
+    color: black;
+    text-align: right;
+ 
+}
+/* 
+   SCIENTIFIC GRID
+   5 columns. Most buttons flow naturally in source order,
+   but AC and the operators need to jump to the right spot:
+   AC drops down next to C/0/./=, and +/-/×/÷ stack in
+   column 5 next to their matching number rows.
+ */
+ 
+.buttons.scientific{
+    gap:12px;
+}
+ 
+.buttons.scientific button{
+    height: 62px;
+}
+
+.buttons.scientific .function{
+    background-color: #cccaca;
+}
+
+.buttons.scientific .function:hover{
+    background-color: #dfdada;
+}
+ 
+.buttons.scientific button:nth-child(15){ grid-column:1; grid-row:7; }  /* AC */
+.buttons.scientific button:nth-child(19){ grid-column:5; grid-row:3; }  /* +  */
+.buttons.scientific button:nth-child(20){ grid-column:1; grid-row:5; }  /* 4  */
+.buttons.scientific button:nth-child(21){ grid-column:2; grid-row:5; }  /* 5  */
+.buttons.scientific button:nth-child(22){ grid-column:3; grid-row:5; }  /* 6  */
+.buttons.scientific button:nth-child(23){ grid-column:5; grid-row:4; }  /* -  */
+.buttons.scientific button:nth-child(24){ grid-column:1; grid-row:6; }  /* 1  */
+.buttons.scientific button:nth-child(25){ grid-column:2; grid-row:6; }  /* 2  */
+.buttons.scientific button:nth-child(26){ grid-column:3; grid-row:6; }  /* 3  */
+.buttons.scientific button:nth-child(27){ grid-column:5; grid-row:5; }  /* ×  */
+.buttons.scientific button:nth-child(28){ grid-column:2; grid-row:7; }  /* C  */
+.buttons.scientific button:nth-child(29){ grid-column:3; grid-row:7; }  /* 0  */
+.buttons.scientific button:nth-child(30){ grid-column:4; grid-row:7; }  /* .  */
+.buttons.scientific button:nth-child(31){ grid-column:5; grid-row:7; }  /* =  */
+.buttons.scientific button:nth-child(32){ grid-column:5; grid-row:6; }  /* ÷  */
+ 
+
+    </style>
+</head>
+<body>
+
+    <div class="calculator">
+        <div>
+        <input type="text" id="screen" value="0" readonly>
+        </div>
+
+        <!-- Basic calculator-->
+         <div id="basicMode">
+
+            <div class="toggle-btn">
+                <button id="historyBasic" class="history-btn">History</button>
+                <span class="toggle-label">SCI</span>
+                <button id="toggleSci" class="switch" aria-label="Turn on scientific mode"></button>
+            </div>
+            
+
+            <div>
+
+                <button class="number">7</button>
+                <button class="number">8</button>
+                <button class="number">9</button>
+                <button class="operator">+</button>
+
+                <button class="number">4</button>
+                <button class="number">5</button>
+                <button class="number">6</button>
+                <button class="operator">-</button>
+
+                <button class="number">1</button>
+                <button class="number">2</button>
+                <button class="number">3</button>
+                <button class="operator">×</button>
+
+                <button class="clear">C</button>
+                <button class="number">0</button>
+                <button class="equal-to">=</button>
+                <button class="operator">÷</button>
+
+         </div>
+    </div>
+
+    <!-- Scientific Part-->
+     <div id="scientificMode">
+
+        <div class="toggle-btn">
+            <button id="historyScientific" class="history-btn">History</button>
+            <span class="toggle-label">SCI</span>
+            <button id="toggleStandard" class="switch" aria-label="Turn off scientific mode"></button>
+        </div>
+
+        <div class="buttons scientific">
+
+            <button class="function">sin</button>
+            <button class="function">cos</button>
+            <button class="function">tan</button>
+            <button class="function">log</button>
+            <button class="function">ln</button>
+
+            <button class="function">x²</button>
+            <button class="function">xʸ</button>
+            <button class="function">√</button>
+            <button class="function">π</button>
+            <button class="function">e</button>
+
+             <button class="function">(</button>
+            <button class="function">)</button>
+            <button class="function">%</button>
+            <button class="function">±</button>
+            <button class="clear">AC</button>
+
+            <button class="number">7</button>
+            <button class="number">8</button>
+            <button class="number">9</button>
+            <button class="operator">+</button>
+
+            <button class="number">4</button>
+            <button class="number">5</button>
+            <button class="number">6</button>
+            <button class="operator">-</button>
+
+            <button class="number">1</button>
+            <button class="number">2</button>
+            <button class="number">3</button>
+            <button class="operator">×</button>
+
+            <button class="clear">C</button>
+            <button class="number">0</button>
+            <button class="decimal">.</button>
+            <button class="equal-to">=</button>
+            <button class="operator">÷</button>
+            
+            
+
+        </div>
+     </div>
+
+     <!-- History Panel-->
+      <div id="historyPanel">
+ 
+        <div class="history-header">
+            <button id="historyBack" class="history-back-btn">‹ Back</button>
+            <span class="history-title">History</span>
+            <button id="historyClear" class="history-clear-btn">Clear</button>
+        </div>
+ 
+        <div id="historyList" class="history-list">
+ 
+        </div>
+      </div>
+
+     <script>
+
+        // JavaScript code for calculator functionality
+
+        const screen = document.getElementById("screen");
+ 
+        const numberButtons = document.querySelectorAll(".number");
+        const operatorButtons = document.querySelectorAll(".operator");
+ 
+        const equalButtons = document.querySelectorAll(".equal-to");
+        const clearButtons = document.querySelectorAll(".clear");
+ 
+        const toggleSci = document.getElementById("toggleSci");
+        const toggleBtn = document.getElementById("toggle-btn");
+ 
+        const basicMode = document.getElementById("basicMode");
+        const scientificMode = document.getElementById("scientificMode");
+ 
+ 
+        // current expression
+ 
+        let expression = "";
+ 
+ 
+        // Number Buttons
+ 
+        numberButtons.forEach(button => {
+            button.addEventListener("click", () => {
+ 
+                if (screen.value === "0"){
+                    screen.value = button.textContent;
+                } else {
+                    screen.value += button.textContent;
+                }
+            });
+        });
+ 
+ 
+        // Operators
+ 
+        operatorButtons.forEach(button => {
+ 
+            button.addEventListener("click", () => {
+ 
+                let operator = button.textContent;
+ 
+                //convert display symbols to JavaScript Operators
+                if(operator === "×") operator = "*";
+                if(operator === "÷")  operator = "/";
+ 
+                screen.value += operator;
+            });
+        });
+ 
+ 
+        // Decimal Button
+ 
+        const decimalButton = document.querySelector(".decimal");
+ 
+        if(decimalButton){
+ 
+            decimalButton.addEventListener("click",()=>{
+ 
+                screen.value += ".";
+            });
+        }
+ 
+ 
+        // Scientific Functions
+ 
+        // trims floating-point noise, e.g. sin(180) landing on
+        // 1.2e-16 instead of 0
+        function roundResult(n){
+            return Math.round(n * 1e10) / 1e10;
+        }
+ 
+        // degree-based trig + logs, available to eval() so an
+        // expression like "sin(45)" or "log(100)" works once the
+        // user finishes typing it and presses "="
+        function sin(deg){ return roundResult(Math.sin(deg * Math.PI / 180)); }
+        function cos(deg){ return roundResult(Math.cos(deg * Math.PI / 180)); }
+        function tan(deg){ return roundResult(Math.tan(deg * Math.PI / 180)); }
+        function log(x){ return Math.log10(x); }
+        function ln(x){ return Math.log(x); }
+        function sqrt(x){ return Math.sqrt(x); }
+ 
+        function appendReplacingZero(text){
+            if (screen.value === "0"){
+                screen.value = text;
+            } else {
+                screen.value += text;
+            }
+        }
+ 
+        // for x², %, ± - act on whatever's on screen right now
+        function computeNow(operation){
+            try{
+ 
+                const current = eval(screen.value);
+                const result = operation(current);
+ 
+                if(!isFinite(result)) throw new Error("math error");
+ 
+                screen.value = result;
+            }
+            catch{
+ 
+                screen.value = "Error";
+ 
+                setTimeout(()=>{
+                    screen.value = "0";
+                },1200);
+            }
+        }
+ 
+        const functionButtons = document.querySelectorAll(".function");
+ 
+        functionButtons.forEach(button => {
+ 
+            button.addEventListener("click", () => {
+ 
+                const label = button.textContent;
+ 
+                switch(label){
+                    case "sin": appendReplacingZero("sin("); break;
+                    case "cos": appendReplacingZero("cos("); break;
+                    case "tan": appendReplacingZero("tan("); break;
+                    case "log": appendReplacingZero("log("); break;
+                    case "ln":  appendReplacingZero("ln(");  break;
+                    case "√":   appendReplacingZero("sqrt("); break;
+                    case "π":   appendReplacingZero(Math.PI.toString()); break;
+                    case "e":   appendReplacingZero(Math.E.toString()); break;
+                    case "(":   appendReplacingZero("("); break;
+                    case ")":   screen.value += ")"; break;
+                    case "xʸ":  screen.value += "**"; break;
+                    case "x²":  computeNow(x => x * x); break;
+                    case "%":   computeNow(x => x / 100); break;
+                    case "±":   computeNow(x => x * -1); break;
+                }
+            });
+        });
+ 
+ 
+        // Clear Button
+ 
+        clearButtons.forEach(button=>{
+ 
+            button.addEventListener("click",()=>{
+ 
+                screen.value="0";
+            });
+        });
+ 
+ 
+        // Equals 
+
+equalButtons.forEach(button => {
+
+    button.addEventListener("click", () => {
+
+        try {
+
+            const currentExpression = screen.value;
+
+            // Convert display symbols
+            let jsExpression = currentExpression
+                .replace(/×/g, "*")
+                .replace(/÷/g, "/");
+
+            let result = eval(jsExpression);
+
+            if (!isFinite(result)) throw new Error();
+
+            // Save to history BEFORE changing the screen
+            addHistoryEntry(currentExpression, result);
+
+            screen.value = result;
+
+        }
+
+        catch {
+
+            screen.value = "Error";
+
+            setTimeout(() => {
+                screen.value = "0";
+            }, 1200);
+
+        }
+
+    });
+
+});
+ 
+ 
+        // Toggle Scientific Mode
+ 
+        toggleSci.addEventListener("click",()=>{
+ 
+            basicMode.style.display="none";
+ 
+            scientificMode.style.display="block";
+        });
+ 
+        toggleStandard.addEventListener("click",()=>{
+ 
+            scientificMode.style.display="none";
+ 
+            basicMode.style.display="block";
+        });
+
+         // History
+ 
+        const calcHistory = [];
+        let modeBeforeHistory = "basic";
+ 
+        function addHistoryEntry(expressionText, result){
+            calcHistory.push({ expression: expressionText, result: result });
+            if(calcHistory.length > 50) calcHistory.shift();
+            renderHistory();
+        }
+ 
+        function renderHistory(){
+ 
+            historyList.innerHTML = "";
+ 
+            if(calcHistory.length === 0){
+                const empty = document.createElement("p");
+                empty.className = "history-empty";
+                empty.textContent = "No calculations yet";
+                historyList.appendChild(empty);
+                return;
+            }
+ 
+            // most recent first
+            for(let i = calcHistory.length - 1; i >= 0; i--){
+ 
+                const entry = calcHistory[i];
+ 
+                const item = document.createElement("div");
+                item.className = "history-entry";
+ 
+                const exprLine = document.createElement("span");
+                exprLine.className = "history-expr";
+                exprLine.textContent = entry.expression;
+ 
+                const resultLine = document.createElement("span");
+                resultLine.className = "history-result";
+                resultLine.textContent = entry.result;
+ 
+                item.appendChild(exprLine);
+                item.appendChild(resultLine);
+ 
+                // tapping an entry recalls that result to the screen
+                item.addEventListener("click", () => {
+                    screen.value = entry.result.toString();
+                    closeHistory();
+                });
+ 
+                historyList.appendChild(item);
+            }
+        }
+ 
+        function openHistory(){
+ 
+            modeBeforeHistory = (scientificMode.style.display === "block") ? "scientific" : "basic";
+ 
+            basicMode.style.display = "none";
+            scientificMode.style.display = "none";
+            historyPanel.style.display = "block";
+ 
+            renderHistory();
+        }
+ 
+        function closeHistory(){
+ 
+            historyPanel.style.display = "none";
+ 
+            if(modeBeforeHistory === "scientific"){
+                scientificMode.style.display = "block";
+            } else {
+                basicMode.style.display = "block";
+            }
+        }
+ 
+        historyBasic.addEventListener("click", openHistory);
+        historyScientific.addEventListener("click", openHistory);
+ 
+        historyBack.addEventListener("click", closeHistory);
+ 
+        historyClear.addEventListener("click", () => {
+            calcHistory.length = 0;
+            renderHistory();
+        });
+ 
+ 
+ 
+        // Toggle Scientific Mode
+ 
+        toggleSci.addEventListener("click",()=>{
+ 
+            basicMode.style.display="none";
+ 
+            scientificMode.style.display="block";
+        });
+ 
+        toggleStandard.addEventListener("click",()=>{
+ 
+            scientificMode.style.display="none";
+ 
+            basicMode.style.display="block";
+        });
+ 
+
+     </script>
+    
+</body>
+</html>
